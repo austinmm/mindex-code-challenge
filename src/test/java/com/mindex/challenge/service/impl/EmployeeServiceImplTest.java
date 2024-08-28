@@ -1,86 +1,81 @@
 package com.mindex.challenge.service.impl;
 
+import com.mindex.challenge.dao.EmployeeRepository;
 import com.mindex.challenge.data.Employee;
-import com.mindex.challenge.service.EmployeeService;
-import org.junit.Before;
+import com.mindex.challenge.exception.ResourceNotFoundException;
+import com.mindex.challenge.testingutils.TestBuilderUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Optional;
+
+import static com.mindex.challenge.testingutils.TestAssertionUtil.assertEmployeeEquivalence;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(MockitoJUnitRunner.class)
 public class EmployeeServiceImplTest {
 
-    private String employeeUrl;
-    private String employeeIdUrl;
+    @InjectMocks
+    private EmployeeServiceImpl employeeServiceImpl;
 
-    @Autowired
-    private EmployeeService employeeService;
+    @Mock
+    private EmployeeRepository employeeRepository;
 
-    @LocalServerPort
-    private int port;
+    @Test
+    public void ensureEmployeeIsLocated_whenFindByEmployeeId_givenEmployeeIdHasMatchInDb() {
+        //Given
+        Employee expected = TestBuilderUtil.buildEmployee();
+        String employeeId = expected.getEmployeeId();
+        when(employeeRepository.findByEmployeeId(employeeId)).thenReturn(Optional.of(expected));
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+        //When
+        Employee actual = employeeServiceImpl.read(employeeId);
 
-    @Before
-    public void setup() {
-        employeeUrl = "http://localhost:" + port + "/employee";
-        employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
+        //Then
+        verify(employeeRepository, times(1)).findByEmployeeId(employeeId);
+        assertEmployeeEquivalence(expected, actual);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void ensureResourceNotFoundExceptionIsThrown_whenFindByEmployeeId_givenEmployeeIdHasNoMatchInDb() {
+        //Given
+        String employeeId = "employeeIdWithNoMatch";
+        when(employeeRepository.findByEmployeeId(employeeId)).thenReturn(Optional.empty());
+
+        //When
+        employeeServiceImpl.read(employeeId);
     }
 
     @Test
-    public void testCreateReadUpdate() {
-        Employee testEmployee = new Employee();
-        testEmployee.setFirstName("John");
-        testEmployee.setLastName("Doe");
-        testEmployee.setDepartment("Engineering");
-        testEmployee.setPosition("Developer");
+    public void ensureEmployeeIsCreated_whenCreate_givenValidEmployee() {
+        //Given
+        Employee expected = TestBuilderUtil.buildEmployee();
+        expected.setEmployeeId(null);
+        when(employeeRepository.insert(any(Employee.class))).thenReturn(expected);
 
-        // Create checks
-        Employee createdEmployee = restTemplate.postForEntity(employeeUrl, testEmployee, Employee.class).getBody();
+        //When
+        Employee actual = employeeServiceImpl.create(expected);
 
-        assertNotNull(createdEmployee.getEmployeeId());
-        assertEmployeeEquivalence(testEmployee, createdEmployee);
-
-
-        // Read checks
-        Employee readEmployee = restTemplate.getForEntity(employeeIdUrl, Employee.class, createdEmployee.getEmployeeId()).getBody();
-        assertEquals(createdEmployee.getEmployeeId(), readEmployee.getEmployeeId());
-        assertEmployeeEquivalence(createdEmployee, readEmployee);
-
-
-        // Update checks
-        readEmployee.setPosition("Development Manager");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Employee updatedEmployee =
-                restTemplate.exchange(employeeIdUrl,
-                        HttpMethod.PUT,
-                        new HttpEntity<Employee>(readEmployee, headers),
-                        Employee.class,
-                        readEmployee.getEmployeeId()).getBody();
-
-        assertEmployeeEquivalence(readEmployee, updatedEmployee);
+        //Then
+        verify(employeeRepository, times(1)).insert(any(Employee.class));
+        assertNotNull(actual.getEmployeeId());
     }
 
-    private static void assertEmployeeEquivalence(Employee expected, Employee actual) {
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getDepartment(), actual.getDepartment());
-        assertEquals(expected.getPosition(), actual.getPosition());
+    @Test
+    public void ensureEmployeeIsUpdated_whenUpdate_givenValidEmployee() {
+        //Given
+        Employee expected = TestBuilderUtil.buildEmployee();
+        when(employeeRepository.save(any(Employee.class))).thenReturn(expected);
+
+        //When
+        Employee actual = employeeServiceImpl.update(expected);
+
+        //Then
+        verify(employeeRepository, times(1)).save(any(Employee.class));
+        assertEmployeeEquivalence(expected, actual);
     }
 }

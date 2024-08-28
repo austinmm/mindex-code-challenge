@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindex.challenge.dao.EmployeeRepository;
 import com.mindex.challenge.data.Employee;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,16 +11,23 @@ import java.io.InputStream;
 
 @Component
 public class DataBootstrap {
+
     private static final String DATASTORE_LOCATION = "/static/employee_database.json";
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    public DataBootstrap(EmployeeRepository employeeRepository, ObjectMapper objectMapper) {
+        this.employeeRepository = employeeRepository;
+        this.objectMapper = objectMapper;
+    }
 
     @PostConstruct
     public void init() {
+        /*
+        Loads Employee records from /static/employee_database.json file into mongodb database on application startup
+        */
         InputStream inputStream = this.getClass().getResourceAsStream(DATASTORE_LOCATION);
 
         Employee[] employees = null;
