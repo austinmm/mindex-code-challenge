@@ -17,8 +17,12 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Required to perform HTTP request client request input validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'de.bwaldvogel:mongo-java-server:1.44.0'
+    // Enables Swagger UI for all endpoints accessible at: http://localhost:8080/swagger-ui/index.html
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'junit:junit:4.13.1'
