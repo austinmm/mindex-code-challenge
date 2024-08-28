@@ -1,0 +1,253 @@
+_type: export
+__export_format: 4
+__export_date: 2024-08-28T18:09:37.229Z
+__export_source: insomnia.desktop.app:v9.3.3
+resources:
+  - _id: req_235f440f870c4b4a88939987e814f99f
+    parentId: fld_dce84c7c221b4a8791f5df0ba1813b0a
+    modified: 1724868313243
+    created: 1724868239725
+    url: http://localhost:8080/reporting-structure/16a596ae-edd3-4847-99fe-c4518e82c86f
+    name: /reporting-structure/{employeeId}
+    description: ""
+    method: GET
+    body: { }
+    parameters: [ ]
+    headers: [ ]
+    authentication: { }
+    metaSortKey: -1724868239725
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_dce84c7c221b4a8791f5df0ba1813b0a
+    parentId: fld_2cdc2dd0eb9b449eba01e5058aa060a0
+    modified: 1724867718945
+    created: 1724867718945
+    name: Reporting Structure
+    description: ""
+    environment: { }
+    environmentPropertyOrder: null
+    metaSortKey: -1724867718945
+    _type: request_group
+  - _id: fld_2cdc2dd0eb9b449eba01e5058aa060a0
+    parentId: wrk_scratchpad
+    modified: 1724867664798
+    created: 1724867664798
+    name: Mindex Challenge
+    description: ""
+    environment: { }
+    environmentPropertyOrder: null
+    metaSortKey: -1724867664798
+    _type: request_group
+  - _id: wrk_scratchpad
+    parentId: null
+    modified: 1724867643167
+    created: 1724867643167
+    name: Scratch Pad
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_372fd775fada4c77a4011df3f58037b3
+    parentId: fld_3751be9c9a8d4b0599b9d98f9897a993
+    modified: 1724868007424
+    created: 1724867728771
+    url: http://localhost:8080/employee/16a596ae-edd3-4847-99fe-c4518e82c86f
+    name: /employee/{employeeId}
+    description: ""
+    method: GET
+    body: { }
+    parameters: [ ]
+    headers: [ ]
+    authentication: { }
+    metaSortKey: -1724867728771
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_3751be9c9a8d4b0599b9d98f9897a993
+    parentId: fld_2cdc2dd0eb9b449eba01e5058aa060a0
+    modified: 1724867694813
+    created: 1724867694813
+    name: Employee
+    description: ""
+    environment: { }
+    environmentPropertyOrder: null
+    metaSortKey: -1724867694813
+    _type: request_group
+  - _id: req_9296cbf966ca4615b67aefd6f6a48b95
+    parentId: fld_3751be9c9a8d4b0599b9d98f9897a993
+    modified: 1724868148645
+    created: 1724867990747
+    url: http://localhost:8080/employee
+    name: /employee
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "firstName": "Austin",
+          "lastName": "Marino",
+          "position": "Software Engineer",
+          "department": "Department in Mindex",
+          "directReports": []
+        }
+    parameters: [ ]
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_c56560106dc64d559ab0f388479f3a89
+    authentication: { }
+    metaSortKey: -1724867728721
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_d835470309a043eb8c3b38d1708193ed
+    parentId: fld_3751be9c9a8d4b0599b9d98f9897a993
+    modified: 1724868226182
+    created: 1724868094586
+    url: http://localhost:8080/employee/16a596ae-edd3-4847-99fe-c4518e82c86f
+    name: /employee/{employeeId}
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "employeeId": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+          "firstName": "John",
+          "lastName": "Lennon",
+          "position": "Senior Development Manager",
+          "department": "IT",
+          "directReports": [
+        		{
+        			"employeeId": "b7839309-3348-463b-a7e3-5de1c168beb3",
+        			"firstName": null,
+        			"lastName": null,
+        			"position": null,
+        			"department": null,
+        			"directReports": null
+        		},
+        		{
+        			"employeeId": "03aa1462-ffa9-4978-901b-7c001562cf6f",
+        			"firstName": null,
+        			"lastName": null,
+        			"position": null,
+        			"department": null,
+        			"directReports": null
+        		}
+        	]
+        }
+    parameters: [ ]
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_c56560106dc64d559ab0f388479f3a89
+    authentication: { }
+    metaSortKey: -1724867728671
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_055800fb9c164cd7bbe9ef3d566cd59f
+    parentId: fld_4a57f70469e04df8b629c4bc5dbbd461
+    modified: 1724868342674
+    created: 1724868332091
+    url: http://localhost:8080/compensation/16a596ae-edd3-4847-99fe-c4518e82c86f
+    name: /compensation/{employeeId}
+    description: ""
+    method: GET
+    body: { }
+    parameters: [ ]
+    headers: [ ]
+    authentication: { }
+    metaSortKey: -1724868335533
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_4a57f70469e04df8b629c4bc5dbbd461
+    parentId: fld_2cdc2dd0eb9b449eba01e5058aa060a0
+    modified: 1724867677831
+    created: 1724867677831
+    name: Compensation
+    description: ""
+    environment: { }
+    environmentPropertyOrder: null
+    metaSortKey: -1724867677831
+    _type: request_group
+  - _id: req_a2f45d05837f40bc92ed6e2776ca636d
+    parentId: fld_4a57f70469e04df8b629c4bc5dbbd461
+    modified: 1724868440504
+    created: 1724868355713
+    url: http://localhost:8080/compensation
+    name: /compensation
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"employeeId": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+        	"salary": 3
+        }
+    parameters: [ ]
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: { }
+    metaSortKey: -1724868287629
+    isPrivate: false
+    pathParameters: [ ]
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    parentId: wrk_scratchpad
+    modified: 1724867652089
+    created: 1724867652089
+    name: Base Environment
+    data: { }
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1724867652089
+    _type: environment
+  - _id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    parentId: wrk_scratchpad
+    modified: 1724867652143
+    created: 1724867652143
+    name: Default Jar
+    cookies: [ ]
+    _type: cookie_jar

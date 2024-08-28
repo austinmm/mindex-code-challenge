@@ -7,6 +7,9 @@ http://localhost:8080/swagger-ui.html
 ## View API Documentation
 http://localhost:8080/v3/api-docs
 
+# Notice of Insomnia
+If you use [Insomnia](https://insomnia.rest) please see the `/insomnia` folder where you will find this project's exported API schema which can be imported into your Insomnia workspace.
+
 # Coding Challenge Description
 ## What's Provided
 A simple [Spring Boot](https://projects.spring.io/spring-boot/) web application has been created and bootstrapped with data. The application contains 
