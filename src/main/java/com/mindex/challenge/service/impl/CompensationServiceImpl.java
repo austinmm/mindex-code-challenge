@@ -31,6 +31,7 @@ public class CompensationServiceImpl implements CompensationService {
     @Override
     public Compensation createNewCompensationForEmployee(CompensationCreationRequest compensationCreationRequest) {
         //When creating a new compensation for an employee we will also store their current position and department for historical tracking
+        //Additionally this step will verify that the employeeId is valid and matches and existing employee DB record
         Employee employee = employeeService.read(compensationCreationRequest.getEmployeeId());
         LOG.debug("Located employee to create new compensation for: {}", employee);
         Compensation compensation = buildCompensation(employee, compensationCreationRequest);
@@ -43,7 +44,7 @@ public class CompensationServiceImpl implements CompensationService {
     public Compensation fetchCurrentCompensationForEmployeeId(String employeeId) {
         LOG.debug("Reading compensation for employeeId: {}", employeeId);
 
-        //Since an employee might have 1-N compensation records we only want to pull the one with the most recent effective date
+        //Since an employee might have 0-N compensation records we only want to pull the one with the most recent effective date
         return compensationRepository.findTopByEmployeeIdOrderByEffectiveDateDesc(employeeId)
                 .orElseThrow(() -> buildResourceNotFoundException("Failed to fetch compensation for employeeId: " + employeeId));
     }
