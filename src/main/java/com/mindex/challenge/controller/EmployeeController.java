@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
   I would recommend that the Employee DB POJO class not be sent/received to/from the client.
   Instead, I would recommend the use of a data transfer object (DTO) to reduce the overhead
     if the requirements for the client's Employee POJO eventually changes from the DB's Employee POJO schema.
+  Additionally, with a separate employee DTO we can attach custom constrains to each field to ensure client input is valid.
 */
-
 @RestController
 @RequestMapping("employee")
 public class EmployeeController {
@@ -29,14 +29,12 @@ public class EmployeeController {
     @PostMapping
     public Employee create(@RequestBody Employee employee) {
         LOG.debug("Received employee create request for [{}]", employee);
-
         return employeeService.create(employee);
     }
 
     @GetMapping("/{id}")
     public Employee read(@UUID @PathVariable String id) {
         LOG.debug("Received employee read request for id [{}]", id);
-
         return employeeService.read(id);
     }
 

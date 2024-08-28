@@ -31,5 +31,3 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         return MongoClients.create(mongoConnectionString);
     }
 }
-
-

@@ -36,6 +36,7 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
     private int getNumberOfSubordinatesForEmployeeId(String employeeId) {
         Employee employee = employeeRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> {
+                    // Throwing a 5XX level NullPointerException since this wouldn't be a client request issue but rather a DB data issue
                     String errorMessage = String.format("Failed to locate employee, with id %s, when attempting to locate their subordinates", employeeId);
                     return new NullPointerException(errorMessage);
                 });
@@ -51,7 +52,7 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
         }
 
         /*
-         Recursively invokes the method for each direct report of queried employee.
+         Recursively invokes the method for each direct report of queried employee
          We then sum up all the recursive calls with an initial value of the queried employee's direct report count
         */
         return directReports.stream()

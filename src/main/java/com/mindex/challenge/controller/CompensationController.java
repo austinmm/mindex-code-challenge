@@ -1,7 +1,9 @@
 package com.mindex.challenge.controller;
 
+import com.mindex.challenge.dto.CompensationCreationRequest;
 import com.mindex.challenge.model.Compensation;
 import com.mindex.challenge.service.CompensationService;
+import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +22,14 @@ public class CompensationController {
     }
 
     @PostMapping
-    public Compensation create(@RequestBody Compensation compensation) {
-        LOG.debug("Received compensation create request: {}", compensation);
-
-        return compensationService.create(compensation);
+    public Compensation createNewCompensationForEmployee(@Valid @RequestBody CompensationCreationRequest compensationCreationRequest) {
+        LOG.debug("Received compensation creation request: {}", compensationCreationRequest);
+        return compensationService.createNewCompensationForEmployee(compensationCreationRequest);
     }
 
     @GetMapping("/{employeeId}")
-    public Compensation read(@UUID @PathVariable String employeeId) {
-        LOG.debug("Received compensation read request for employeeId: {}", employeeId);
-
-        return compensationService.read(employeeId);
+    public Compensation fetchCurrentCompensationForEmployeeId(@UUID @PathVariable String employeeId) {
+        LOG.debug("Received request to fetch current compensation for employeeId: {}", employeeId);
+        return compensationService.fetchCurrentCompensationForEmployeeId(employeeId);
     }
 }

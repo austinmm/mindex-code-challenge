@@ -1,10 +1,11 @@
 package com.mindex.challenge.service;
 
+import com.mindex.challenge.dto.CompensationCreationRequest;
 import com.mindex.challenge.model.Compensation;
 
 public interface CompensationService {
 
-    Compensation create(Compensation compensation);
+    Compensation createNewCompensationForEmployee(CompensationCreationRequest compensationCreationRequest);
 
-    Compensation read(String employeeId);
+    Compensation fetchCurrentCompensationForEmployeeId(String employeeId);
 }

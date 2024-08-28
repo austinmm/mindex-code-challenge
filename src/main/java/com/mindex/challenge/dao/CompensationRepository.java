@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CompensationRepository extends MongoRepository<Compensation, String> {
 
-    Optional<Compensation> findByEmployeeId(String employeeId);
+    // This would be an inexpensive and quick query since most employees would have a relatively small compensation record history
+    Optional<Compensation> findTopByEmployeeIdOrderByEffectiveDateDesc(String employeeId);
 }
