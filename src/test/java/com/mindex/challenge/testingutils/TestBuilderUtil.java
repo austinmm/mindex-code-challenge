@@ -12,7 +12,7 @@ public class TestBuilderUtil {
         return extractObjectFromJsonFile("test_employee.json", Employee.class);
     }
 
-    public static HttpHeaders buildHttpHeadersWithJsonContentType(){
+    public static HttpHeaders buildHttpHeadersWithJsonContentType() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;

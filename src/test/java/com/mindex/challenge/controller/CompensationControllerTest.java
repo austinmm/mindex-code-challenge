@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
@@ -80,6 +77,21 @@ public class CompensationControllerTest {
     }
 
     @Test
+    public void ensure404Response_whenFetchCurrentCompensationForEmployeeId_givenEmployeeIdWithNoMatchInDb() {
+        //Given
+        String employeeId = UUID.randomUUID().toString();
+
+        //When
+        ResponseEntity<String> actual = restTemplate.getForEntity(compensationForEmployeeIdUrl, String.class, employeeId);
+
+        //Then
+        assertNotNull(actual);
+        assertEquals(HttpStatus.NOT_FOUND, actual.getStatusCode());
+        String expectedBody = String.format("Failed to fetch compensation for employeeId: %s", employeeId);
+        assertEquals(expectedBody, actual.getBody());
+    }
+
+    @Test
     public void ensure400Response_whenCreateNewCompensationForEmployee_givenInvalidSalaryIsProvided() {
         //Given
         HttpHeaders headers = buildHttpHeadersWithJsonContentType();
@@ -97,52 +109,36 @@ public class CompensationControllerTest {
     }
 
     @Test
+    public void ensure404Response_whenCreateNewCompensationForEmployee_givenEmployeeIdWithNoMatchInDb() {
+        //Given
+        HttpHeaders headers = buildHttpHeadersWithJsonContentType();
+        String employeeId = UUID.randomUUID().toString();
+        CompensationCreationRequest compensationCreationRequest = new CompensationCreationRequest(employeeId, 100);
+
+        //When
+        ResponseEntity<String> actual = restTemplate.exchange(compensationUrl, HttpMethod.POST,
+                new HttpEntity<>(compensationCreationRequest, headers), String.class);
+
+        //Then
+        assertNotNull(actual);
+        assertEquals(HttpStatus.NOT_FOUND, actual.getStatusCode());
+        String expectedBody = String.format("Failed to read employee with id: %s", employeeId);
+        assertEquals(expectedBody, actual.getBody());
+    }
+
+    @Test
     public void ensureCompensationWasCreated_whenCreateNewCompensationForEmployee_givenValidCompensationRequest() {
         //Given
         Instant beforeRequestExecutionTime = Instant.now();
         HttpHeaders headers = buildHttpHeadersWithJsonContentType();
-        Employee employee = createAndInsertNewEmployeeInDb();
-        CompensationCreationRequest requestBody = new CompensationCreationRequest(employee.getEmployeeId(), 100);
+        Employee employee = createAndInsertNewEmployeeIntoDb();
+        CompensationCreationRequest compensationCreationRequest = new CompensationCreationRequest(employee.getEmployeeId(), 100);
 
         //When
         Compensation actual = restTemplate.exchange(compensationUrl, HttpMethod.POST,
-                new HttpEntity<>(requestBody, headers), Compensation.class).getBody();
+                new HttpEntity<>(compensationCreationRequest, headers), Compensation.class).getBody();
 
         //Then
-        assertNotNull(actual);
-        assertEquals(requestBody.getEmployeeId(), actual.getEmployeeId());
-        assertEquals(requestBody.getSalary(), actual.getSalary());
-        assertEquals(employee.getDepartment(), actual.getDepartment());
-        assertEquals(employee.getPosition(), actual.getPosition());
-        assertNotNull(actual.getEffectiveDate());
-        assertTrue(Instant.parse(actual.getEffectiveDate()).isAfter(beforeRequestExecutionTime));
-        assertTrue(Instant.parse(actual.getEffectiveDate()).isBefore(Instant.now()));
-    }
-
-    @Test
-    public void ensureMostRecentCompensationIsReturned_whenFetchCurrentCompensationForEmployeeId_givenValidEmployeeId() {
-        //Given
-        Instant beforeRequestExecutionTime = Instant.now();
-        HttpHeaders headers = buildHttpHeadersWithJsonContentType();
-        Employee employee = createAndInsertNewEmployeeInDb();
-        CompensationCreationRequest requestBody = new CompensationCreationRequest(employee.getEmployeeId(), 100);
-
-        //When
-        Compensation actual = restTemplate.exchange(compensationUrl, HttpMethod.POST,
-                new HttpEntity<>(requestBody, headers), Compensation.class).getBody();
-
-        //Then
-        assertNotNull(actual);
-        assertEquals(requestBody.getEmployeeId(), actual.getEmployeeId());
-        assertEquals(requestBody.getSalary(), actual.getSalary());
-        assertEquals(employee.getDepartment(), actual.getDepartment());
-        assertEquals(employee.getPosition(), actual.getPosition());
-        assertNotNull(actual.getEffectiveDate());
-        assertTrue(Instant.parse(actual.getEffectiveDate()).isAfter(beforeRequestExecutionTime));
-        assertTrue(Instant.parse(actual.getEffectiveDate()).isBefore(Instant.now()));
-    }
-
-    private static void assertCompensationResponseIsCorrect(Compensation actual, Employee employee, CompensationCreationRequest compensationCreationRequest, Instant beforeRequestExecutionTime) {
         assertNotNull(actual);
         assertEquals(compensationCreationRequest.getEmployeeId(), actual.getEmployeeId());
         assertEquals(compensationCreationRequest.getSalary(), actual.getSalary());
@@ -153,7 +149,39 @@ public class CompensationControllerTest {
         assertTrue(Instant.parse(actual.getEffectiveDate()).isBefore(Instant.now()));
     }
 
-    private Employee createAndInsertNewEmployeeInDb() {
+    @Test
+    public void ensureMostRecentCompensationIsReturned_whenFetchCurrentCompensationForEmployeeId_givenValidEmployeeId() {
+        //Given
+        HttpHeaders headers = buildHttpHeadersWithJsonContentType();
+        Employee employee = createAndInsertNewEmployeeIntoDb();
+        //Creates up to 4 new compensations for one employee, ensuring that the get request always returns the employee's most recent compensation
+        for (int i = 1; i <= 4; i++) {
+            Instant beforeRequestExecutionTime = Instant.now();
+            employee.setDepartment("Department_" + i);
+            employee.setPosition("Position_" + i);
+            employee = employeeRepository.save(employee);
+            CompensationCreationRequest compensationCreationRequest = new CompensationCreationRequest(employee.getEmployeeId(), 100 * i);
+
+            Compensation expected = restTemplate.exchange(compensationUrl, HttpMethod.POST,
+                    new HttpEntity<>(compensationCreationRequest, headers), Compensation.class).getBody();
+            assertNotNull(expected);
+
+            //When
+            Compensation actual = restTemplate.getForEntity(compensationForEmployeeIdUrl, Compensation.class, employee.getEmployeeId()).getBody();
+
+            //Then
+            assertNotNull(actual);
+            assertEquals(employee.getEmployeeId(), actual.getEmployeeId());
+            assertEquals(employee.getDepartment(), actual.getDepartment());
+            assertEquals(employee.getPosition(), actual.getPosition());
+            assertEquals(expected.getSalary(), actual.getSalary());
+            assertNotNull(actual.getEffectiveDate());
+            assertTrue(Instant.parse(actual.getEffectiveDate()).isAfter(beforeRequestExecutionTime));
+            assertTrue(Instant.parse(actual.getEffectiveDate()).isBefore(Instant.now()));
+        }
+    }
+
+    private Employee createAndInsertNewEmployeeIntoDb() {
         Employee employee = new Employee();
         employee.setEmployeeId(UUID.randomUUID().toString());
         employee.setFirstName("John");

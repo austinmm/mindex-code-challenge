@@ -46,7 +46,7 @@ public class CompensationServiceImpl implements CompensationService {
 
         //Since an employee might have 1-N compensation records we only want to pull the one with the most recent effective date
         return compensationRepository.findTopByEmployeeIdOrderByEffectiveDateDesc(employeeId)
-                .orElseThrow(() -> buildResourceNotFoundException("Failed to read compensation for employeeId: " + employeeId));
+                .orElseThrow(() -> buildResourceNotFoundException("Failed to fetch compensation for employeeId: " + employeeId));
     }
 
     private static Compensation buildCompensation(Employee employee, CompensationCreationRequest compensationCreationRequest) {

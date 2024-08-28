@@ -14,6 +14,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static com.mindex.challenge.testingutils.TestAssertionUtil.assertEmployeeEquivalence;
 import static com.mindex.challenge.testingutils.TestBuilderUtil.buildHttpHeadersWithJsonContentType;
@@ -56,6 +57,21 @@ public class EmployeeControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), actual.get("status"));
         assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), actual.get("error"));
         assertEquals("/employee/invalidUUIDFormat", actual.get("path"));
+    }
+
+    @Test
+    public void ensure404Response_whenRead_givenEmployeeIdWithNoMatchInDb() {
+        //Given
+        String employeeId = UUID.randomUUID().toString();
+
+        //When
+        ResponseEntity<String> actual = restTemplate.getForEntity(employeeIdUrl, String.class, employeeId);
+
+        //Then
+        assertNotNull(actual);
+        assertEquals(HttpStatus.NOT_FOUND, actual.getStatusCode());
+        String expectedBody = String.format("Failed to read employee with id: %s", employeeId);
+        assertEquals(expectedBody, actual.getBody());
     }
 
     @Test
