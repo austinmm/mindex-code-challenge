@@ -1,4 +1,13 @@
-# Coding Challenge
+# Notice of OpenAPI Use
+This project is using the `org.springdoc:springdoc-openapi-starter-webmvc-ui` dependency and therefore once the application successfully starts-up you can interact with the RESTful APIs at the links below. 
+
+## Execute API Calls
+http://localhost:8080/swagger-ui.html
+
+## View API Documentation
+http://localhost:8080/v3/api-docs
+
+# Coding Challenge Description
 ## What's Provided
 A simple [Spring Boot](https://projects.spring.io/spring-boot/) web application has been created and bootstrapped with data. The application contains 
 information about all employees at a company. On application start-up, an in-memory Mongo database is bootstrapped with 

@@ -36,8 +36,7 @@ public class CompensationServiceImpl implements CompensationService {
         Compensation compensation = buildCompensation(employee, compensationCreationRequest);
         LOG.debug("Creating compensation: {}", compensation);
         //We insert the employee's new compensation while preserving their previous compensation data
-        compensationRepository.insert(compensation);
-        return compensation;
+        return compensationRepository.insert(compensation);
     }
 
     @Override

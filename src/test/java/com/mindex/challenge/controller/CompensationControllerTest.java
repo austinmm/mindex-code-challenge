@@ -140,6 +140,7 @@ public class CompensationControllerTest {
 
         //Then
         assertNotNull(actual);
+        assertNotNull(actual.getCompensationId());
         assertEquals(compensationCreationRequest.getEmployeeId(), actual.getEmployeeId());
         assertEquals(compensationCreationRequest.getSalary(), actual.getSalary());
         assertEquals(employee.getDepartment(), actual.getDepartment());
@@ -171,6 +172,7 @@ public class CompensationControllerTest {
 
             //Then
             assertNotNull(actual);
+            assertNotNull(actual.getCompensationId());
             assertEquals(employee.getEmployeeId(), actual.getEmployeeId());
             assertEquals(employee.getDepartment(), actual.getDepartment());
             assertEquals(employee.getPosition(), actual.getPosition());
