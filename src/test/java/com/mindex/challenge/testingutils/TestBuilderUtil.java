@@ -1,6 +1,6 @@
 package com.mindex.challenge.testingutils;
 
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 
 import static com.mindex.challenge.testingutils.TestFunctionUtil.extractObjectFromJsonFile;
 

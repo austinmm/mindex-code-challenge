@@ -1,6 +1,6 @@
 package com.mindex.challenge.controller;
 
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 import com.mindex.challenge.service.EmployeeService;
 import org.hibernate.validator.constraints.UUID;
 import org.slf4j.Logger;

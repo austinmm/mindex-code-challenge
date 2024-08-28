@@ -10,6 +10,10 @@ public class TestFunctionUtil {
     private static final String BASE_FILE_PATH = "src/test/resources/data/";
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    public static String buildUrlWithPortAndPath(int port, String path) {
+        return String.format("http://localhost:%d%s", port, path);
+    }
+
     public static <T> T extractObjectFromJsonFile(String fileName, Class<T> classType) {
         File file = getFileFromFileName(fileName);
         try {

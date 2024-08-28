@@ -1,6 +1,6 @@
 package com.mindex.challenge.controller;
 
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 import com.mindex.challenge.service.EmployeeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Map;
+
 import static com.mindex.challenge.testingutils.TestAssertionUtil.assertEmployeeEquivalence;
+import static com.mindex.challenge.testingutils.TestFunctionUtil.buildUrlWithPortAndPath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -37,8 +37,23 @@ public class EmployeeControllerTest {
 
     @Before
     public void setup() {
-        employeeUrl = "http://localhost:" + port + "/employee";
-        employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
+        employeeUrl = buildUrlWithPortAndPath(port, "/employee");
+        employeeIdUrl = buildUrlWithPortAndPath(port, "/employee/{id}");
+    }
+
+    @Test
+    public void ensure400Response_whenRead_givenInvalidEmployeeIdFormatIsProvided() {
+        //Given
+        String employeeId = "invalidUUIDFormat";
+
+        //When
+        Map<String, Object> actual = restTemplate.getForEntity(employeeIdUrl, Map.class, employeeId).getBody();
+
+        //Then
+        assertNotNull(actual);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), actual.get("status"));
+        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), actual.get("error"));
+        assertEquals("/employee/invalidUUIDFormat", actual.get("path"));
     }
 
     @Test

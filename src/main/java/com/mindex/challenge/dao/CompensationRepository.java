@@ -1,13 +1,13 @@
 package com.mindex.challenge.dao;
 
-import com.mindex.challenge.model.Employee;
+import com.mindex.challenge.model.Compensation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface EmployeeRepository extends MongoRepository<Employee, String> {
+public interface CompensationRepository extends MongoRepository<Compensation, String> {
 
-    Optional<Employee> findByEmployeeId(String employeeId);
+    Optional<Compensation> findByEmployeeId(String employeeId);
 }

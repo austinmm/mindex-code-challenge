@@ -1,6 +1,6 @@
 package com.mindex.challenge.service;
 
-import com.mindex.challenge.data.ReportingStructure;
+import com.mindex.challenge.dto.ReportingStructure;
 
 public interface ReportingStructureService {
 

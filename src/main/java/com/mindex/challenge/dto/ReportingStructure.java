@@ -1,4 +1,6 @@
-package com.mindex.challenge.data;
+package com.mindex.challenge.dto;
+
+import com.mindex.challenge.model.Employee;
 
 public class ReportingStructure {
 

@@ -2,7 +2,7 @@ package com.mindex.challenge;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindex.challenge.dao.EmployeeRepository;
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

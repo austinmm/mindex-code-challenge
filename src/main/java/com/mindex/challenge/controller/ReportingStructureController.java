@@ -1,6 +1,6 @@
 package com.mindex.challenge.controller;
 
-import com.mindex.challenge.data.ReportingStructure;
+import com.mindex.challenge.dto.ReportingStructure;
 import com.mindex.challenge.service.ReportingStructureService;
 import org.hibernate.validator.constraints.UUID;
 import org.springframework.web.bind.annotation.GetMapping;

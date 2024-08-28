@@ -1,7 +1,7 @@
 package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.dao.EmployeeRepository;
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 import com.mindex.challenge.exception.ResourceNotFoundException;
 import com.mindex.challenge.testingutils.TestBuilderUtil;
 import org.junit.Test;

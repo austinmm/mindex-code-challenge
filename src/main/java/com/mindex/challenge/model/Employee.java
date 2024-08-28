@@ -1,4 +1,4 @@
-package com.mindex.challenge.data;
+package com.mindex.challenge.model;
 
 import org.springframework.data.annotation.Id;
 

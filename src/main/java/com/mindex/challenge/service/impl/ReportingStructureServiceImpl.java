@@ -1,8 +1,8 @@
 package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.dao.EmployeeRepository;
-import com.mindex.challenge.data.Employee;
-import com.mindex.challenge.data.ReportingStructure;
+import com.mindex.challenge.model.Employee;
+import com.mindex.challenge.dto.ReportingStructure;
 import com.mindex.challenge.service.EmployeeService;
 import com.mindex.challenge.service.ReportingStructureService;
 import org.slf4j.Logger;
@@ -27,9 +27,9 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
 
     @Override
     public ReportingStructure generateReportingStructureForEmployeeId(String employeeId) {
-        LOG.debug("Calculating the number of subordinates for employeeId: {}", employeeId);
         Employee employee = employeeService.read(employeeId);
-        int numberOfReports = getNumberOfSubordinatesForEmployeeId(employeeId);
+        LOG.debug("Calculating the number of subordinates under employee: {}", employee);
+        int numberOfReports = getNumberOfSubordinatesForEmployee(employee);
         return new ReportingStructure(employee, numberOfReports);
     }
 
@@ -40,7 +40,10 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
                     return new NullPointerException(errorMessage);
                 });
 
+        return getNumberOfSubordinatesForEmployee(employee);
+    }
 
+    private int getNumberOfSubordinatesForEmployee(Employee employee) {
         List<Employee> directReports = employee.getDirectReports();
         if (CollectionUtils.isEmpty(directReports)) {
             // This employee has no subordinates and has already been accounted for so we return 0 to exit the recursion

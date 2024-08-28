@@ -1,7 +1,7 @@
 package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.dao.EmployeeRepository;
-import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.model.Employee;
 import com.mindex.challenge.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         LOG.debug("Reading employee with id [{}]", id);
 
         return employeeRepository.findByEmployeeId(id)
-                .orElseThrow(() -> buildResourceNotFoundException("Invalid employeeId: " + id));
+                .orElseThrow(() -> buildResourceNotFoundException("Failed to read employee with id: " + id));
     }
 
     @Override
